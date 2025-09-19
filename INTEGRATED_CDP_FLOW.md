@@ -63,7 +63,7 @@ graph TD
 POST /api/wallet/verify-payment
 {
   "fromAddress": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
-  "toAddress": "0xD880E96C35B217B9E220B69234A12AcFC175f92B",
+  "toAddress": "0xf78bf2c8f95aE05cc77B3F1eC2F93E8b89Bd3DdD",
   "amount": "29.99",
   "token": "ETH",
   "minutes": 5
@@ -183,7 +183,7 @@ DB_PATH=./stablecart.db
 
 # Network Configuration
 NETWORK=sepolia
-MERCHANT_ADDRESS=0xD880E96C35B217B9E220B69234A12AcFC175f92B
+MERCHANT_ADDRESS=0xf78bf2c8f95aE05cc77B3F1eC2F93E8b89Bd3DdD
 ```
 
 ### Database Schema
@@ -298,7 +298,7 @@ curl -X POST "http://localhost:3001/api/wallet/verify-payment" \
   -H "Content-Type: application/json" \
   -d '{
     "fromAddress": "0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6",
-    "toAddress": "0xD880E96C35B217B9E220B69234A12AcFC175f92B",
+    "toAddress": "0xf78bf2c8f95aE05cc77B3F1eC2F93E8b89Bd3DdD",
     "amount": "29.99",
     "token": "ETH"
   }'

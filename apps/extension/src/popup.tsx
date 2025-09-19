@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 
 // For browser extensions, we'll use a hardcoded URL or get it from storage
-const VERCEL_LINK = 'localhost:3000'; // Hardcoded for now
+const VERCEL_LINK = 'localhost:3000'; 
 
 interface ProductInfo {
   title: string;

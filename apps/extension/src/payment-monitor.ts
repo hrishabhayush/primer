@@ -5,7 +5,7 @@
  */
 
 // Note: We'll hardcode the merchant address here since importing from webapp would cause build issues
-const MERCHANT_ADDRESS = '0xD880E96C35B217B9E220B69234A12AcFC175f92B'; // Base mainnet merchant address
+const MERCHANT_ADDRESS = '0xf78bf2c8f95aE05cc77B3F1eC2F93E8b89Bd3DdD'; // Base mainnet merchant address
 
 export interface PaymentDetectionConfig {
   customerAddress: string;

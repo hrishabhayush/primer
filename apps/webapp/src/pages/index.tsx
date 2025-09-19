@@ -122,7 +122,7 @@ const Home = () => {
         userId: address || 'anonymous' // Use wallet address as user ID
       };
 
-      const response = await fetch('http://localhost:3002/api/checkout-sessions', {
+      const response = await fetch('http://localhost:3001/api/checkout-sessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ const Home = () => {
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         // Verify payment using CDP tracking
-        const verificationResponse = await fetch('http://localhost:3002/api/wallet/verify-payment', {
+        const verificationResponse = await fetch('http://localhost:3001/api/wallet/verify-payment', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -158,7 +158,7 @@ const Home = () => {
             console.log('✅ Payment verified! Transaction:', verificationResult.transaction);
             
             // Get gift codes for the session
-            const giftCodesResponse = await fetch(`http://localhost:3002/api/checkout-sessions/${sessionId}/gift-codes`);
+            const giftCodesResponse = await fetch(`http://localhost:3001/api/checkout-sessions/${sessionId}/gift-codes`);
             
             if (giftCodesResponse.ok) {
               const giftCodesResult = await giftCodesResponse.json();
