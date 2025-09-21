@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useConnect, useAccount, useDisconnect } from 'wagmi';
+import { useConnect, useAccount, useDisconnect, useBalance } from 'wagmi';
 import { coinbaseWallet } from 'wagmi/connectors';
 import { pay, getPaymentStatus } from '@base-org/account';
 import { priceConversionService, PriceData } from '../services/priceConversion';
@@ -27,6 +27,15 @@ const Home = () => {
   const { connect, isPending: isConnecting } = useConnect();
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+  
+  // USDC contract address on Base
+  const USDC_ADDRESS = '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913';
+  
+  // Read USDC balance
+  const { data: usdcBalance, isLoading: isUsdcBalanceLoading } = useBalance({
+    address: address,
+    token: USDC_ADDRESS,
+  });
   
   // Get Sepolia merchant address from config
   const MERCHANT_ADDRESS = getMerchantAddress();
@@ -375,7 +384,7 @@ const Home = () => {
             
             <div className={styles.itemRow}>
               <span className={styles.itemLabel}>Total:</span>
-              <span className={styles.itemValue}>0.01 USDC ($0.01)</span>
+              <span className={styles.itemValue}>{productPrice.toFixed(2)} USDC (${productPrice.toFixed(2)})</span>
             </div>
             
             <div className={styles.itemRow}>
@@ -399,13 +408,8 @@ const Home = () => {
               </div>
               
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Amazon Receiver Address:</span>
-                <div className={styles.addressWithIcon}>
-                  <span className={styles.externalLink}>
-                    <img src="/icons/opennewwindow.svg" alt="External Link" />
-                  </span>
-                  <span className={styles.infoValue}>{formatReceiverAddress(MERCHANT_ADDRESS)}</span>
-                </div>
+                <span className={styles.infoLabel}>One-time Payment Address:</span>
+                <span className={styles.infoValue}>{formatReceiverAddress(MERCHANT_ADDRESS)}</span>
               </div>
             </div>
 
@@ -426,8 +430,12 @@ const Home = () => {
               </div>
               
               <div className={styles.infoRow}>
-                <span className={styles.infoLabel}>Amount due in crypto:</span>
-                <span className={styles.infoValue}>0.01 USDC ($0.01)</span>
+                <span className={styles.infoLabel}>USDC Wallet Balance:</span>
+                <span className={styles.infoValue}>$
+                  {isUsdcBalanceLoading ? 'Loading...' : 
+                   usdcBalance ? `$${parseFloat(usdcBalance.formatted).toFixed(2)} USDC` : 
+                   '$0.00 USDC'}
+                </span>
               </div>
             </div>
 
@@ -445,7 +453,7 @@ const Home = () => {
               
               <div className={styles.infoRow}>
                 <span className={styles.infoLabel}>Token:</span>
-                <span className={styles.infoValue}>{isBasePay ? 'USD Coin (USDC)' : 'Ethereum (ETH)'}</span>
+                <span className={styles.infoValue}>USD Coin (USDC)</span>
               </div>
             </div>
           </div>
@@ -515,6 +523,7 @@ const Home = () => {
             </div>
           ) : (
             <PaymentButton
+              amount={productPrice}
               merchantAddress={MERCHANT_ADDRESS}
               onPaymentSuccess={handlePaymentSuccess}
               onPaymentError={handlePaymentError}

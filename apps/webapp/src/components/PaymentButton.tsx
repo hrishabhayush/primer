@@ -34,7 +34,7 @@ const ERC20_ABI = [
 ] as const;
 
 interface PaymentButtonProps {
-  // amount: number; // Commented out - using fixed $0.01 for now
+  amount: number; // USD amount to convert to USDC
   merchantAddress: `0x${string}`;
   onPaymentSuccess?: (txHash: string) => void;
   onPaymentError?: (error: Error) => void;
@@ -44,7 +44,7 @@ interface PaymentButtonProps {
 }
 
 const PaymentButton: React.FC<PaymentButtonProps> = ({
-  // amount, // Commented out - using fixed $0.01 for now
+  amount, // USD amount to convert to USDC
   merchantAddress,
   onPaymentSuccess,
   onPaymentError,
@@ -52,8 +52,8 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   disabled = false,
   className = ''
 }) => {
-  // Fixed amount: $0.01 in USDC (0.01 USDC = $0.01)
-  const fixedAmountUSDC = 0.01;
+  // Convert USD amount to USDC (1 USD = 1 USDC)
+  const usdcAmountFromUSD = amount;
   const [isDisabled, setIsDisabled] = useState(disabled);
   const [error, setError] = useState<Error | null>(null);
   
@@ -71,7 +71,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   
   // USDC amount calculation
-  const usdcAmount = parseUnits(fixedAmountUSDC.toString(), 6); // USDC has 6 decimals
+  const usdcAmount = parseUnits(usdcAmountFromUSD.toString(), 6); // USDC has 6 decimals
 
   // Transaction state
   const [txHash, setTxHash] = useState<string>('');
@@ -150,19 +150,19 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     try {
       setError(null);
       
-      console.log(`Initiating USDC payment of ${fixedAmountUSDC} USDC (fixed $0.01)`);
+      console.log(`Initiating USDC payment of ${usdcAmountFromUSD} USDC ($${amount} USD)`);
       console.log(`Transaction will be sent from: ${address} to: ${merchantAddress}`);
-      console.log(`USDC amount: ${usdcAmount.toString()} (${fixedAmountUSDC} USDC)`);
+      console.log(`USDC amount: ${usdcAmount.toString()} (${usdcAmountFromUSD} USDC)`);
 
       console.log('=== TRANSACTION DETAILS ===');
       console.log('USDC contract address:', USDC_ADDRESS);
       console.log('Base chain ID:', base.id);
       console.log('Merchant address (Base):', merchantAddress);
       console.log('Amount in USDC units:', usdcAmount.toString());
-      console.log('Amount in USDC:', fixedAmountUSDC);
+      console.log('Amount in USDC:', usdcAmountFromUSD);
       console.log('Sender address:', address);
       console.log('Network: Base Mainnet');
-      console.log('Transaction type: USDC transfer (fixed $0.01)');
+      console.log(`Transaction type: USDC transfer ($${amount} USD)`);
       console.log('========================');
 
       await writeContract({
@@ -304,7 +304,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     if (isSending || isConfirming || isPostVerificationProcessing) return 'Processing';
     if (!isConnected) return 'Connect to wallet';
     // Removed gas error check
-    return 'Pay $0.01 USDC on Base';
+    return `Pay $${amount.toFixed(2)} USDC on Base`;
   };
 
   return (

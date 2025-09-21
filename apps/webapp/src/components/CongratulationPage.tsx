@@ -51,13 +51,8 @@ const CongratulationPage: React.FC<CongratulationPageProps> = ({
           </div>
           
           <div className={`${styles.detailRow} ${styles.amazonReceiverRow}`}>
-            <span className={styles.detailLabel}>Amazon Receiver Address:</span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '5px'}}>
-              <button className={styles.externalLinkButton} onClick={openBlockExplorer}>
-                <img src="/icons/opennewwindow.svg" alt="External Link" />
-              </button>
-              <span className={styles.detailValue}>{formatAddress(receiverAddress)}</span>
-            </div>
+            <span className={styles.detailLabel}>One-time Payment Address:</span>
+            <span className={styles.detailValue}>{formatAddress(receiverAddress)}</span>
           </div>
           
           <div className={styles.divider}></div>
