@@ -10,12 +10,17 @@ import CongratulationPage from '../components/CongratulationPage';
 import styles from '../styles/Home.module.css';
 
 const Home = () => {
-  const [productPrice, setProductPrice] = useState<number>(0.01);
+  // Get price from URL parameters or use default
+  const urlParams = new URLSearchParams(window.location.search);
+  const priceFromUrl = urlParams.get('price');
+  const [productPrice, setProductPrice] = useState<number>(
+    priceFromUrl ? parseFloat(priceFromUrl) : 0.01
+  );
   const [productTitle, setProductTitle] = useState<string>('Amazon Basics 4K Fire TV Stick');
   const [currentTime, setCurrentTime] = useState<string>('');
   const [isBasePay, setIsBasePay] = useState<boolean>(false);
   
-  // Price state - commented out for now, using fixed $0.01
+  // Price state - now using dynamic pricing from URL or default
   // const [priceData, setPriceData] = useState<PriceData | null>(null);
   // const [isLoadingPrice, setIsLoadingPrice] = useState(true);
   

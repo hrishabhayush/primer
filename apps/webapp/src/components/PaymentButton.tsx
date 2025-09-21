@@ -112,12 +112,61 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
         console.log('💾 Stored wallet address for payment monitoring:', address);
       }
       
+      // Create Amazon gift card after successful payment
+      createAmazonGiftCard(hash);
+      
       // Show processing state for 1.5 seconds, then show congratulation page
       setTimeout(() => {
         onShowCongratulation?.(hash);
       }, 1500);
     }
   }, [isSuccess, hash, address, onShowCongratulation]);
+
+  // Create Amazon gift card function
+  const createAmazonGiftCard = async (txHash: string) => {
+    try {
+      console.log('🎁 Creating Amazon gift card for $0.01...');
+      
+      const response = await fetch('http://localhost:3001/api/gift-cards/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: 0.01,
+          currencyCode: 'USD'
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success && result.giftCard) {
+          console.log('✅ Amazon gift card created successfully:', result.giftCard.claimCode);
+          console.log('🎫 Gift card details:', result.giftCard);
+          
+          // Store the gift card code for later use
+          localStorage.setItem('latest_gift_card', JSON.stringify({
+            claimCode: result.giftCard.claimCode,
+            amount: result.giftCard.amount,
+            transactionHash: txHash,
+            createdAt: new Date().toISOString()
+          }));
+          
+          // Show success message with gift card code
+          alert(`🎉 Payment successful!\n\n🎁 Amazon Gift Card Created:\nCode: ${result.giftCard.claimCode}\nAmount: $${result.giftCard.amount}\n\nTransaction: ${txHash}`);
+        } else {
+          console.error('❌ Failed to create gift card:', result.error);
+          alert(`🎉 Payment successful!\n\n⚠️ Gift card creation failed: ${result.error}\n\nTransaction: ${txHash}`);
+        }
+      } else {
+        console.error('❌ Gift card API call failed:', response.status);
+        alert(`🎉 Payment successful!\n\n⚠️ Gift card service unavailable\n\nTransaction: ${txHash}`);
+      }
+    } catch (error) {
+      console.error('❌ Error creating Amazon gift card:', error);
+      alert(`🎉 Payment successful!\n\n⚠️ Gift card creation error: ${error instanceof Error ? error.message : 'Unknown error'}\n\nTransaction: ${txHash}`);
+    }
+  };
 
 
 

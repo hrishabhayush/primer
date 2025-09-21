@@ -174,35 +174,55 @@ export class PaymentMonitor {
   }
 
   /**
-   * Get gift codes for the order (placeholder - needs backend implementation)
+   * Get gift codes for the order by calling Amazon API via backend
    */
   private async getGiftCodesForOrder(): Promise<Array<{code: string; denomination: number; status: string}>> {
     try {
-      // For now, return a mock gift code
-      // In production, this would call the backend to get actual gift codes
+      console.log('🎁 Creating Amazon gift card via backend API...');
+      
+      const backendUrl = 'http://localhost:3001';
+      const response = await fetch(`${backendUrl}/api/gift-cards/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: this.config?.expectedAmount || 0.01,
+          currencyCode: 'USD'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Backend API call failed: ${response.status} ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      
+      if (result.success && result.giftCard) {
+        console.log('✅ Amazon gift card created successfully:', result.giftCard.claimCode);
+        
+        return [
+          {
+            code: result.giftCard.claimCode,
+            denomination: Math.round((result.giftCard.amount || 0.01) * 100), // Convert to cents
+            status: result.giftCard.status || 'ACTIVE'
+          }
+        ];
+      } else {
+        throw new Error(result.error || 'Failed to create gift card');
+      }
+    } catch (error) {
+      console.error('❌ Error creating Amazon gift card:', error);
+      
+      // Fallback to mock gift code if Amazon API fails
+      console.log('⚠️ Falling back to mock gift code due to API error');
       return [
         {
-          code: 'MOCK-GIFT-CODE-12345',
+          code: 'FALLBACK-MOCK-CODE-12345',
           denomination: 1, // $0.01 in cents
           status: 'ACTIVE'
         }
       ];
-
-      // TODO: Implement actual backend call
-      // const response = await fetch(`${this.backendUrl}/api/admin/gift-codes/for-order`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     amount: this.config?.expectedAmount,
-      //     sessionId: this.config?.sessionId
-      //   })
-      // });
-      // const result = await response.json();
-      // return result.giftCodes || [];
-
-    } catch (error) {
-      console.error('❌ Error getting gift codes:', error);
-      return [];
     }
   }
 

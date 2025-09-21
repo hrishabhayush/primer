@@ -196,18 +196,12 @@ import { onrampIntegration } from './onramp-integration';
       }
       
       try {
-        // Create automation data with mock gift codes
+        // Create automation data - gift codes will be provided by payment monitor
         const automationData = {
           type: 'GIFT_CARD_AUTOMATION',
           sessionId: `session_${Date.now()}`,
           amazonUrl: window.location.href,
-          giftCodes: [
-            {
-              code: 'KNQA-EHFMMR-TBA3',
-              denomination: 1, // $0.01 in cents
-              status: 'ACTIVE'
-            }
-          ],
+          giftCodes: [], // Will be populated by payment monitor when payment is detected
           totalAmount: 0.01,
           transactionHash: `0x${Math.random().toString(16).substr(2, 64)}`, // Mock hash
           timestamp: Date.now()
