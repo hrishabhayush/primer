@@ -286,7 +286,7 @@ router.get('/test', (req: Request, res: Response) => {
         url: '/api/wallet/verify-payment',
         body: {
           fromAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-          toAddress: '0xD880E96C35B217B9E220B69234A12AcFC175f92B',
+          toAddress: '0xAF5BE3C059aacBBbD23522B3cFc892313d1B47D5',
           amount: '25.50',
           token: 'USDC',
           minutes: 5

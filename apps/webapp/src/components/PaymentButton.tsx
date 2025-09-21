@@ -70,29 +70,17 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
   const { writeContract, data: hash, isPending: isSending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   
-  // Gas estimation for USDC transfer with fallback
+  // USDC amount calculation
   const usdcAmount = parseUnits(fixedAmountUSDC.toString(), 6); // USDC has 6 decimals
-  const { data: gasEstimate, isLoading: isEstimatingGas, error: gasError } = useEstimateGas({
-    to: USDC_ADDRESS,
-    data: encodeFunctionData({
-      abi: ERC20_ABI,
-      functionName: 'transfer',
-      args: [merchantAddress, usdcAmount]
-    }),
-    chainId: base.id,
-  });
-
-  // Fallback gas limit for Base network (ERC20 transfer typically uses ~65000 gas)
-  const fallbackGasLimit = BigInt(80000);
 
   // Transaction state
   const [txHash, setTxHash] = useState<string>('');
   const [isPostVerificationProcessing, setIsPostVerificationProcessing] = useState(false);
 
-  // Update disabled state based on props and processing state (with fallback gas)
+  // Update disabled state based on props and processing state
   useEffect(() => {
-    setIsDisabled(disabled || isSending || isConfirming || isPostVerificationProcessing || (isConnected && isEstimatingGas));
-  }, [disabled, isSending, isConfirming, isPostVerificationProcessing, isEstimatingGas, isConnected]);
+    setIsDisabled(disabled || isSending || isConfirming || isPostVerificationProcessing);
+  }, [disabled, isSending, isConfirming, isPostVerificationProcessing]);
 
   // Update transaction hash when available
   useEffect(() => {
@@ -109,15 +97,7 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
     }
   }, [hash, onPaymentSuccess]);
 
-  // 🆕 ON RAMP: Check if user needs to buy Base ETH when gas estimation fails
-  useEffect(() => {
-    if (gasError && isConnected && address) {
-      console.log('💰 Gas estimation failed - checking if user needs Base ETH...');
-      setShowOnrampButton(true);
-    } else {
-      setShowOnrampButton(false);
-    }
-  }, [gasError, isConnected, address]);
+  // Remove gas error handling - let the transaction handle gas automatically
 
   // Check for transaction confirmation and show congratulation page
   useEffect(() => {
@@ -320,10 +300,10 @@ const PaymentButton: React.FC<PaymentButtonProps> = ({
 
   const getButtonText = () => {
     if (isConnecting) return 'Connecting...';
-    if (isEstimatingGas) return 'Estimating fees...';
+    // Removed gas estimation check
     if (isSending || isConfirming || isPostVerificationProcessing) return 'Processing';
     if (!isConnected) return 'Connect to wallet';
-    if (gasError) return 'Fee estimation failed';
+    // Removed gas error check
     return 'Pay $0.01 USDC on Base';
   };
 

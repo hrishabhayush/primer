@@ -10,7 +10,7 @@ import {
 
 export const config = getDefaultConfig({
   appName: 'Amazon Crypto Checkout',
-  projectId: 'amazon-crypto-checkout-extension',
+  projectId: 'demo-project-id', // Using a demo project ID to prevent errors
   chains: [
     base, // Prioritize Base for mainnet transactions
     mainnet,

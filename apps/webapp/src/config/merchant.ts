@@ -1,7 +1,7 @@
 // Merchant Configuration
 export const MERCHANT_CONFIG = {
   // Base mainnet merchant wallet address
-  WALLET_ADDRESS: '0xD880E96C35B217B9E220B69234A12AcFC175f92B' as `0x${string}`,
+  WALLET_ADDRESS: '0xAF5BE3C059aacBBbD23522B3cFc892313d1B47D5' as `0x${string}`,
   
   // Network configuration
   NETWORK: {

@@ -209,7 +209,7 @@ export class WalletBalanceService {
       // Estimate gas fees
       const gasEstimate = await this.estimateGasFees(
         walletAddress,
-        '0xD880E96C35B217B9E220B69234A12AcFC175f92B', // Merchant address
+        '0xAF5BE3C059aacBBbD23522B3cFc892313d1B47D5', // Merchant address
         orderAmount
       );
 

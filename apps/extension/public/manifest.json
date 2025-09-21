@@ -9,7 +9,15 @@
     "storage"
   ],
   "host_permissions": [
-    "https://*.amazon.*/*"
+    "https://*.amazon.com/*",
+    "https://*.amazon.co.uk/*",
+    "https://*.amazon.de/*",
+    "https://*.amazon.fr/*",
+    "https://*.amazon.it/*",
+    "https://*.amazon.es/*",
+    "https://*.amazon.ca/*",
+    "https://*.amazon.com.au/*",
+    "https://*.amazon.co.jp/*"
   ],
   "background": {
     "service_worker": "background.js"
