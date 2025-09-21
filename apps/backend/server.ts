@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { Express } from 'express';
 import cors from 'cors';
 import { Database } from 'sqlite3';
@@ -8,6 +9,7 @@ import checkoutSessionRoutes, { setCheckoutSessionService, setDatabase } from '.
 import { CheckoutSessionService } from './services/CheckoutSessionService';
 import walletTrackingRoutes, { setWalletTrackingService } from './routes/walletTracking';
 import { WalletTrackingService } from './services/WalletTrackingService';
+import giftCardRoutes from './routes/giftCards';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -54,6 +56,9 @@ async function startServer() {
     
     // Wallet tracking routes
     app.use('/api/wallet', walletTrackingRoutes);
+    
+    // Gift card routes
+    app.use('/api/gift-cards', giftCardRoutes);
     
     console.log('✅ Routes added, setting up endpoints...');
 
